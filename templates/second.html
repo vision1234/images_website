@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Gallery</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            /*align-items: center;*/
+            background-color: black; /* Set the background color to black */
+            color: orange;
+        }
+
+        h1 {
+            margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: black; /* Set the background color to black */
+            color: orange;
+        }
+
+        .image-container img {
+            width: 100%; /* Image width will fill the container */
+            height: 100%; /* Image height will fill the container */
+            display: block;
+            object-fit: cover; /* Scale and crop the image to fill the container */
+        }
+
+        .pagination a {
+            margin: 0 5px;
+        }
+
+        /* ... (Previous CSS styles) ... */
+
+        .home-image-container {
+            margin: 10px;
+            padding: 0;
+            width: 330px;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .home-image-container img {
+            width: 100%;
+            height: 90%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .home-image-container p {
+            width: 100%;
+            height: 10%;
+            display: block;
+            object-fit: cover;
+            font-size: 20px;
+        }
+
+        .random-images-container {
+            display: flex;
+            flex-wrap: wrap;
+            /*justify-content: center;*/
+        }
+        .random-images-container h2{
+            width: 5%;
+        }
+
+        .random-image-container img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .category-name {
+            text-align: center;
+            font-weight: bold;
+        }
+
+    </style>
+</head>
+<body>
+<h1>{{first_level_category}}</h1>
+
+{% for category,items in third_category_images.items() %}
+<div class="random-images-container">
+    <h2>{{category}}</h2>
+    {% for item in items %}
+    <div class="home-image-container">
+        <a href="{{ url_for('preview', first_level_category=item.category_level1,second_level_category=item.category_level2) }}">
+            <img src="{{ url_for('static', filename=item.filename) }}">
+        </a>
+        <p class="category-name">{{ item.category_level3}}</p> <!-- Display the first-level category name -->
+    </div>
+    {% endfor %}
+</div>
+
+{% endfor %}
+
+<!--    <h2>Random Images</h2>-->
+<!--<div class="random-images-container">-->
+<!--    {% for image in random_images %}-->
+<!--    <div class="random-image-container">-->
+<!--        <a href="{{ url_for('image_detail', image_path=image.filename) }}">-->
+<!--            <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">-->
+<!--        </a>-->
+<!--    </div>-->
+<!--    {% endfor %}-->
+<!--</div>-->
+
+</body>
+</html>

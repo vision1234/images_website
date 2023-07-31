@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Detail</title>
+    <style>
+        /* 简单的样式用于展示图片 */
+        body{
+             background-color: black; /* Set the background color to black */
+            color: orange;
+        }
+        .all_thing .image-container {
+            text-align: center;
+            margin: 0;
+            max-height: 60%;
+        }
+
+        .image-container img{
+            max-width: 100%;
+            max-height: 650px;
+        }
+
+        .all_thing .download-button {
+            /*margin-top: 20px;*/
+            margin: 0;
+            width: 150px;
+            /*height: 60px;*/
+            background-color: #3498db;
+              color: #ffffff;
+              border: none;
+              border-radius: 4px;
+              padding: 10px 16px;
+              cursor: pointer;
+              font-size: 14px;
+              transition: background-color 0.3s ease;
+            text-align: center;
+        }
+        .all_thing .download-button:hover {
+          background-color: #2980b9;
+        }
+        .all_thing .download-button a{
+            color: #ffffff;
+            text-decoration: none;
+
+        }
+    </style>
+</head>
+<body>
+<div class="all_thing">
+    <div class="image-container">
+        <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">
+        <p>{{ image.title }}</p>
+    </div>
+    <div class="download-button">
+        <a href="{{ url_for('download_image', image_path=image.filename) }}" target="_blank">Download Image</a>
+    </div>
+</div>
+</body>
+</html>

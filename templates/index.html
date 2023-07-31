@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Image Gallery</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: black; /* Set the background color to black */
+            color:orange;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        .image-container img {
+            width: 100%; /* Image width will fill the container */
+            height: 100%; /* Image height will fill the container */
+            display: block;
+            object-fit: cover; /* Scale and crop the image to fill the container */
+        }
+
+        .pagination a {
+            margin: 0 5px;
+        }
+
+        /* ... (Previous CSS styles) ... */
+
+        .home-image-container {
+            margin: 10px;
+            padding: 0;
+            width: 330px;
+            height: 450px;
+            overflow: hidden;
+        }
+
+        .home-image-container img {
+            width: 100%;
+            height: 90%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .home-image-container p {
+            width: 100%;
+            height: 10%;
+            display: block;
+            object-fit: cover;
+            font-size: 20px;
+        }
+
+        .random-images-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .random-image-container {
+            margin: 10px;
+            width: 200px;
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .random-image-container img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+        }
+
+        .category-name {
+            text-align: center;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>图片分享站</h1>
+
+<h2>
+    分类
+</h2>
+<div class="random-images-container">
+
+    {% for category, image in first_category_images.items() %}
+    <div class="home-image-container">
+        <a href="{{ url_for('second_and_third_level_category', first_level_category=image.category_level1) }}">
+            <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ category }}">
+        </a>
+        <p class="category-name">{{ category }}</p> <!-- Display the first-level category name -->
+    </div>
+    {% endfor %}
+</div>
+
+<!--    <h2>Random Images</h2>-->
+<div class="random-images-container">
+    {% for image in random_images %}
+    <div class="random-image-container">
+        <a href="{{ url_for('image_detail', image_path=image.filename) }}">
+            <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">
+        </a>
+    </div>
+    {% endfor %}
+</div>
+
+</body>
+</html>
