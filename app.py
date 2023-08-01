@@ -127,7 +127,10 @@ def home():
     print(first_category_images)
     # Randomly select some images for the random section
     num_random_images = 12  # You can adjust the number of random images to display
-    random_images = random.sample(images, num_random_images)
+    if len(images) < 12:
+        random_images = images
+    else:
+        random_images = random.sample(images, num_random_images)
     print(first_category_images)
     return render_template("index.html", first_category_images=first_category_images, random_images=random_images)
 

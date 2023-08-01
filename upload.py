@@ -5,7 +5,7 @@ import time
 app = Flask(__name__)
 
 # 设置文件上传的目录
-app.config['UPLOAD_FOLDER'] = 'd:/'
+app.config['UPLOAD_FOLDER'] = 'static/images'
 
 
 @app.route('/', methods=['GET', 'POST'])
