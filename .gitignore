@@ -1,4 +1,6 @@
 venv/
-static/images/*
+static/images/*.jpg
+static/images/*.png
+static/images/*.bmp
 .idea/
 __pycache__/
