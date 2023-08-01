@@ -1,9 +1,9 @@
 venv/
-static/images/*.jpg
-static/images/*.png
-static/images/*.bmp
-static/images/*.jpeg
-static/images/*.psd
-static/images/*.gif
+static/images/**/*.jpg
+static/images/**/*.png
+static/images/**/*.bmp
+static/images/**/*.jpeg
+static/images/**/*.psd
+static/images/**/*.gif
 .idea/
 __pycache__/
