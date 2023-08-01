@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{{first_level_category}}-{{second_level_category}}</title>
+    <title>{{first_level_category}}-{{second_level_category}}-{{third_level_category}}</title>
     <style>
         /* 简单的样式用于展示图片 */
        body {
@@ -47,7 +47,7 @@
     </style>
 </head>
 <body>
-    <h1>{{first_level_category}}-{{second_level_category}}</h1>
+    <h1>{{first_level_category}}-{{second_level_category}}-{{third_level_category}}</h1>
     <div class="image_body">
     <div>
         {% for image in images %}
@@ -62,10 +62,10 @@
     </div>
     <div class="pagination">
         {% if page > 1 %}
-            <a href="{{ url_for('preview', page=page-1) }}">Previous</a>
+            <a href="{{ url_for('preview', page=page-1,first_level_category=first_level_category,second_level_category=second_level_category,third_level_category=third_level_category) }}">Previous</a>
         {% endif %}
         {% if page < total_pages %}
-            <a href="{{ url_for('preview', page=page+1) }}">Next</a>
+            <a href="{{ url_for('preview', page=page+1,first_level_category=first_level_category,second_level_category=second_level_category,third_level_category=third_level_category) }}">Next</a>
         {% endif %}
     </div>
 </body>

@@ -26,7 +26,6 @@ def index():
         target_directory = os.path.join(app.config['UPLOAD_FOLDER'], directory1, directory2, directory3)
         os.makedirs(target_directory, exist_ok=True)
 
-
         # Check if a file with the same name exists in the target directory
         filename, file_extension = os.path.splitext(file.filename)
         timestamp = str(int(time.time()))
@@ -43,4 +42,4 @@ def index():
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

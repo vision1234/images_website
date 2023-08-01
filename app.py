@@ -11,27 +11,25 @@ images_per_page = 12  # 每页显示12张图片
 
 
 # 预览页，显示分类的图片列表，两张一行，带分页
-@app.route('/preview/<string:first_level_category>/<string:second_level_category>')
-def preview(first_level_category, second_level_category):
+@app.route('/preview/<string:first_level_category>/<string:second_level_category>/<string:third_level_category>')
+def preview(first_level_category, second_level_category, third_level_category):
     images = []
     category_level1 = first_level_category
     category_level2 = second_level_category
-    if os.path.isdir(os.path.join(image_folder, category_level1, category_level2)):
-        # 遍历二级分类目录下子目录，作为三级分类
-        for category_level3 in os.listdir(os.path.join(image_folder, category_level1, category_level2)):
-            if os.path.isdir(os.path.join(image_folder, category_level1, category_level2, category_level3)):
-                category_level4_images = os.listdir(
-                    os.path.join(image_folder, category_level1, category_level2, category_level3))
-                for image_file in category_level4_images:
-                    image = {
-                        "category_level1": category_level1,
-                        "category_level2": category_level2,
-                        "category_level3": category_level3,
-                        "filename": (
-                            os.path.join(path_of_images, category_level1, category_level2, category_level3,
-                                         image_file)).replace("\\", "/"),  # 图片文件相对路径，包含分类信息
-                    }
-                    images.append(image)
+    category_level3 = third_level_category
+    if os.path.isdir(os.path.join(image_folder, category_level1, category_level2, category_level3)):
+        category_level4_images = os.listdir(
+            os.path.join(image_folder, category_level1, category_level2, category_level3))
+        for image_file in category_level4_images:
+            image = {
+                "category_level1": category_level1,
+                "category_level2": category_level2,
+                "category_level3": category_level3,
+                "filename": (
+                    os.path.join(path_of_images, category_level1, category_level2, category_level3,
+                                 image_file)).replace("\\", "/"),  # 图片文件相对路径，包含分类信息
+            }
+            images.append(image)
     page = int(request.args.get("page", 1))
     start_idx = (page - 1) * images_per_page
     end_idx = start_idx + images_per_page
@@ -40,7 +38,8 @@ def preview(first_level_category, second_level_category):
 
     total_pages = (len(images) + images_per_page - 1) // images_per_page
     return render_template("preview.html", images=paginated_images, page=page, total_pages=total_pages,
-                           first_level_category=category_level1, second_level_category=category_level2)
+                           first_level_category=category_level1, second_level_category=category_level2,
+                           third_level_category=category_level3)
 
 
 # 详情页，单张图片展示，加下载原图按钮

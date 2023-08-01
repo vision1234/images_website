@@ -87,7 +87,7 @@
     <h2>{{category}}</h2>
     {% for item in items %}
     <div class="home-image-container">
-        <a href="{{ url_for('preview', first_level_category=item.category_level1,second_level_category=item.category_level2) }}">
+        <a href="{{ url_for('preview', first_level_category=item.category_level1,second_level_category=item.category_level2,third_level_category=item.category_level3) }}">
             <img src="{{ url_for('static', filename=item.filename) }}">
         </a>
         <p class="category-name">{{ item.category_level3}}</p> <!-- Display the first-level category name -->
