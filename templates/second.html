@@ -19,6 +19,7 @@
             align-items: center;
             background-color: black; /* Set the background color to black */
             color: orange;
+            font-size: 50px;
         }
 
         .image-container img {
@@ -56,16 +57,19 @@
             object-fit: cover;
             font-size: 20px;
         }
-
-        .random-images-container {
-            {#display: flex;#}
+        .flax_image{
+            display: flex;
             flex-wrap: wrap;
+        }
+        .random-images-container {
+        flex-wrap: wrap;
             /*justify-content: center;*/
         }
-        .random-images-container h2{
-            {#width: 10%;#}
-            word-break:break-all;
+
+        .random-images-container h2 {
+        {#width: 10%;#} word-break: break-all;
             margin-left: 10px;
+            font-size: 30px;
         }
 
         .random-image-container img {
@@ -83,32 +87,35 @@
     </style>
 </head>
 <body>
-<h1>{{first_level_category}}</h1>
+<h1>{{ first_level_category }}</h1>
 
 {% for category,items in third_category_images.items() %}
-<div class="random-images-container">
-    <h2>{{category}}</h2>
-    {% for item in items %}
-    <div class="home-image-container">
-        <a href="{{ url_for('preview', first_level_category=item.category_level1,second_level_category=item.category_level2,third_level_category=item.category_level3) }}">
-            <img src="{{ url_for('static', filename=item.filename) }}">
-        </a>
-        <p class="category-name">{{ item.category_level3}}</p> <!-- Display the first-level category name -->
+    <div class="random-images-container">
+        <h2>{{ category }}</h2>
+        <div class="flax_image">
+            {% for item in items %}
+                <div class="home-image-container">
+                    <a href="{{ url_for('preview', first_level_category=item.category_level1,second_level_category=item.category_level2,third_level_category=item.category_level3) }}">
+                        <img src="{{ url_for('static', filename=item.filename) }}">
+                    </a>
+                    <p class="category-name">{{ item.category_level3 }}</p>
+                    <!-- Display the first-level category name -->
+                </div>
+            {% endfor %}
+        </div>
     </div>
-    {% endfor %}
-</div>
 
 {% endfor %}
 
 <!--    <h2>Random Images</h2>-->
 <!--<div class="random-images-container">-->
 <!--    {% for image in random_images %}-->
-<!--    <div class="random-image-container">-->
-<!--        <a href="{{ url_for('image_detail', image_path=image.filename) }}">-->
-<!--            <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">-->
-<!--        </a>-->
-<!--    </div>-->
-<!--    {% endfor %}-->
+    <!--    <div class="random-image-container">-->
+    <!--        <a href="{{ url_for('image_detail', image_path=image.filename) }}">-->
+    <!--            <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">-->
+    <!--        </a>-->
+    <!--    </div>-->
+    <!--    {% endfor %}-->
 <!--</div>-->
 
 </body>
