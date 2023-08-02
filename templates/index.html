@@ -6,6 +6,9 @@
 
     <title>Image Gallery</title>
     <style>
+        h2{
+            font-size: 30px;
+        }
         body {
             display: flex;
             flex-direction: column;
@@ -97,7 +100,9 @@
     </div>
     {% endfor %}
 </div>
-
+<h2>
+    今日推荐
+</h2>
 <!--    <h2>Random Images</h2>-->
 <div class="random-images-container">
     {% for image in random_images %}
