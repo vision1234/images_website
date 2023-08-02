@@ -42,4 +42,5 @@ def index():
 
 
 if __name__ == '__main__':
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB（示例）
     app.run(debug=True, port=5001)
