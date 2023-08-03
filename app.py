@@ -45,6 +45,7 @@ def preview(first_level_category, second_level_category, third_level_category):
 # 详情页，单张图片展示，加下载原图按钮
 @app.route('/image/<path:image_path>')
 def image_detail(image_path):
+
     images = []
     for category_level1 in os.listdir(image_folder):
         if os.path.isdir(os.path.join(image_folder, category_level1)):
@@ -124,26 +125,27 @@ def home():
                                 break  # Only select the first image for each first-level category
                     if category_level1 in first_category_images:  # If we found an image for the first-level category, stop the loop
                         break
-    print(first_category_images)
     # Randomly select some images for the random section
     num_random_images = 12  # You can adjust the number of random images to display
     if len(images) < 12:
         random_images = images
     else:
         random_images = random.sample(images, num_random_images)
-    print(first_category_images)
     return render_template("index.html", first_category_images=first_category_images, random_images=random_images)
 
 
 @app.route('/second/<string:first_level_category>')
 def second_and_third_level_category(first_level_category):
-    print(first_level_category)
+    user_agent = request.user_agent.string
+    print(user_agent)
+    if user_agent.is_mobile:
+        pass # 手机
+    else:
+        pass
     third_category_images = {}  # Dictionary to store first-level category names and their images
-    print(os.path.join(image_folder, first_level_category))
     if os.path.isdir(os.path.join(image_folder, first_level_category)):
         for category_level2 in os.listdir(os.path.join(image_folder, first_level_category)):
             level3_list = []
-            print("aaa", os.path.join(image_folder, first_level_category, category_level2))
             if os.path.isdir(os.path.join(image_folder, first_level_category, category_level2)):
                 for category_level3 in os.listdir(os.path.join(image_folder, first_level_category, category_level2)):
 
@@ -152,7 +154,6 @@ def second_and_third_level_category(first_level_category):
                         image_files = os.listdir(
                             os.path.join(image_folder, first_level_category, category_level2, category_level3))
                         if image_files:
-                            print(666)
                             image_filename = image_files[0]  # Get the first image in the third-level category
                             image_path = (
                                 os.path.join(path_of_images, first_level_category, category_level2, category_level3,
@@ -165,7 +166,6 @@ def second_and_third_level_category(first_level_category):
                             }
                             level3_list.append(image)
                 third_category_images[category_level2] = level3_list
-    print(third_category_images)
     return render_template("second.html",
                            first_level_category=first_level_category, third_category_images=third_category_images
                            )
