@@ -53,7 +53,6 @@
 <body>
     <h1>{{first_level_category}}-{{second_level_category}}-{{third_level_category}}</h1>
     <div class="image_body">
-    <div>
         {% for image in images %}
         <div class="image-container">
             <a href="{{ url_for('image_detail', image_path=image.filename) }}">
@@ -62,7 +61,6 @@
             <p>{{ image.title }}</p>
         </div>
         {% endfor %}
-    </div>
     </div>
     <div class="pagination">
         {% if page > 1 %}
