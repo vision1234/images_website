@@ -136,10 +136,11 @@ def home():
 
 @app.route('/second/<string:first_level_category>')
 def second_and_third_level_category(first_level_category):
-    user_agent = request.user_agent.string
+    user_agent = request.user_agent
     print(user_agent)
-    if user_agent.is_mobile:
-        pass # 手机
+    print(user_agent.platform)
+    if user_agent.platform:
+        print(user_agent.browser)
     else:
         pass
     third_category_images = {}  # Dictionary to store first-level category names and their images
