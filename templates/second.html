@@ -61,11 +61,13 @@
         .flax_image {
             display: flex;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .random-images-container {
+            display: flex;
             flex-wrap: wrap;
-            justify-content: space-between;
+            justify-content: center;
         }
 
         .random-images-container h2 {
@@ -90,7 +92,6 @@
 </head>
 <body>
 <h1>{{ first_level_category }}</h1>
-
 {% for category,items in third_category_images.items() %}
     <div class="random-images-container">
         <h2>{{ category }}</h2>
@@ -108,7 +109,6 @@
     </div>
 
 {% endfor %}
-
 <!--    <h2>Random Images</h2>-->
 <!--<div class="random-images-container">-->
 <!--    {% for image in random_images %}-->
