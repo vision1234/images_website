@@ -8,3 +8,9 @@ static/images/**/*.gif
 .idea/
 __pycache__/
 config.py
+static/thumbnail/**/*.jpg
+static/thumbnail/**/*.png
+static/thumbnail/**/*.bmp
+static/thumbnail/**/*.jpeg
+static/thumbnail/**/*.psd
+static/thumbnail/**/*.gif
