@@ -1,175 +1,140 @@
 import os
-from flask import Flask, render_template, send_file, url_for, request
+from flask import Flask, render_template, send_file, url_for, request, redirect
 import random
+import utils
 
 app = Flask(__name__)
 
 # 假设我们的图片文件存放在 static/images 目录下
 image_folder = "static/images"
+thumbnail_path = "static/thumbnail"
 path_of_images = "images"
+path_of_thumbnail = "thumbnail"
 images_per_page = 12  # 每页显示12张图片
+images_per_page_pc = 10
 
 
 # 预览页，显示分类的图片列表，两张一行，带分页
-@app.route('/preview/<string:first_level_category>/<string:second_level_category>/<string:third_level_category>')
-def preview(first_level_category, second_level_category, third_level_category):
-    images = []
-    category_level1 = first_level_category
-    category_level2 = second_level_category
-    category_level3 = third_level_category
-    if os.path.isdir(os.path.join(image_folder, category_level1, category_level2, category_level3)):
-        category_level4_images = os.listdir(
-            os.path.join(image_folder, category_level1, category_level2, category_level3))
-        for image_file in category_level4_images:
-            image = {
-                "category_level1": category_level1,
-                "category_level2": category_level2,
-                "category_level3": category_level3,
-                "filename": (
-                    os.path.join(path_of_images, category_level1, category_level2, category_level3,
-                                 image_file)).replace("\\", "/"),  # 图片文件相对路径，包含分类信息
-            }
-            images.append(image)
+@app.route('/preview/<string:cate>')
+def preview(cate):
+    coll = utils.get_collect(utils.get_conn(), utils.coll)
+    data = utils.select_by_cate(coll, cate)
     page = int(request.args.get("page", 1))
-    start_idx = (page - 1) * images_per_page
-    end_idx = start_idx + images_per_page
-
-    paginated_images = images[start_idx:end_idx]
-
-    total_pages = (len(images) + images_per_page - 1) // images_per_page
+    mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
+    user_agent = request.headers.get('User-Agent')
+    new_num = images_per_page_pc
+    for kw in mobile_keywords:
+        if kw in user_agent:
+            new_num = images_per_page
+            break
+    start_idx = (page - 1) * new_num
+    end_idx = start_idx + new_num
+    paginated_images = data[start_idx:end_idx]
+    total_pages = (len(data) + new_num - 1) // new_num
+    print(paginated_images)
     return render_template("preview.html", images=paginated_images, page=page, total_pages=total_pages,
-                           first_level_category=category_level1, second_level_category=category_level2,
-                           third_level_category=category_level3)
+                           cate=cate, page_name='preview')
 
 
 # 详情页，单张图片展示，加下载原图按钮
-@app.route('/image/<path:image_path>')
-def image_detail(image_path):
+@app.route('/search/<string:keyword>')
+def search(keyword, page=1):
+    keyword = keyword.strip()
+    collection = utils.get_collect(utils.get_conn(), utils.coll)
+    query = {
+        "$or": [
+            {"cate": {"$regex": keyword, "$options": "i"}},
+            {"tag": {"$regex": keyword, "$options": "i"}}
+        ]
+    }
 
-    images = []
-    for category_level1 in os.listdir(image_folder):
-        if os.path.isdir(os.path.join(image_folder, category_level1)):
-            # 遍历一级分类目录下的子目录，作为二级分类
-            for category_level2 in os.listdir(os.path.join(image_folder, category_level1)):
-                if os.path.isdir(os.path.join(image_folder, category_level1, category_level2)):
-                    # 遍历二级分类目录下子目录，作为三级分类
-                    for category_level3 in os.listdir(os.path.join(image_folder, category_level1, category_level2)):
-                        if os.path.isdir(os.path.join(image_folder, category_level1, category_level2, category_level3)):
-                            category_level4_images = os.listdir(
-                                os.path.join(image_folder, category_level1, category_level2, category_level3))
-                            for image_file in category_level4_images:
-                                image = {
-                                    "category_level1": category_level1,
-                                    "category_level2": category_level2,
-                                    "category_level3": category_level3,
-                                    "filename": (
-                                        os.path.join(path_of_images, category_level1, category_level2, category_level3,
-                                                     image_file)).replace("\\", "/"),  # 图片文件相对路径，包含分类信息
-                                }
-                                images.append(image)
-    image = next((img for img in images if img["filename"] == image_path), None)
-    if image:
-        return render_template("detail.html", image=image)
+    # 执行查询
+    results = collection.find(query)
+    mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
+    user_agent = request.headers.get('User-Agent')
+    new_num = images_per_page_pc
+    for kw in mobile_keywords:
+        if kw in user_agent:
+            new_num = images_per_page
+            break
+    if results.count() != 0:
+        print(results.count())
+        data = list(results)
+        page = int(request.args.get("page", 1))
+        start_idx = (page - 1) * new_num
+        end_idx = start_idx + new_num
+        paginated_images = data[start_idx:end_idx]
+        total_pages = (len(data) + new_num - 1) // new_num
+        return render_template("search.html", images=paginated_images, page=page, total_pages=total_pages,
+                               keyword=keyword, message='以下是"' + keyword + '"的搜索结果')
     else:
-        return "Image not found", 404
-
-
-# 下载原图
-@app.route('/download/<path:image_path>')
-def download_image(image_path):
-    return send_file((os.path.join("static", image_path)).replace("\\", "/"), as_attachment=True)
+        return render_template("search.html", images=[], page=page, total_pages=1,
+                               keyword=keyword, message='未找到有关"' + keyword + '"的结果')
+        # print(request.referrer)
+        # previous_page = request.referrer
+        # if previous_page is not None:
+        #     return redirect(previous_page)
+        # else:
+        #     return redirect('/')
 
 
 @app.route('/')
 def home():
-    images = []
-    first_category_images = {}  # Dictionary to store first-level category names and their images
-    for category_level1 in os.listdir(image_folder):
-        if os.path.isdir(os.path.join(image_folder, category_level1)):
-            # 遍历一级分类目录下的子目录，作为二级分类
-            for category_level2 in os.listdir(os.path.join(image_folder, category_level1)):
-                if os.path.isdir(os.path.join(image_folder, category_level1, category_level2)):
-                    # 遍历二级分类目录下子目录，作为三级分类
-                    for category_level3 in os.listdir(os.path.join(image_folder, category_level1, category_level2)):
-                        if os.path.isdir(os.path.join(image_folder, category_level1, category_level2, category_level3)):
-                            category_level4_images = os.listdir(
-                                os.path.join(image_folder, category_level1, category_level2, category_level3))
-                            for image_file in category_level4_images:
-                                image = {
-                                    "category_level1": category_level1,
-                                    "category_level2": category_level2,
-                                    "category_level3": category_level3,
-                                    "filename": (
-                                        os.path.join(path_of_images, category_level1, category_level2, category_level3,
-                                                     image_file)).replace("\\", "/"),  # 图片文件相对路径，包含分类信息
-                                }
-                                images.append(image)
-    for category_level1 in os.listdir(image_folder):
-        if os.path.isdir(os.path.join(image_folder, category_level1)):
-            for category_level2 in os.listdir(os.path.join(image_folder, category_level1)):
-                if os.path.isdir(os.path.join(image_folder, category_level1, category_level2)):
-                    for category_level3 in os.listdir(os.path.join(image_folder, category_level1, category_level2)):
-                        if os.path.isdir(os.path.join(image_folder, category_level1, category_level2, category_level3)):
-                            image_files = os.listdir(
-                                os.path.join(image_folder, category_level1, category_level2, category_level3))
-                            if image_files:
-                                image_filename = image_files[0]  # Get the first image in the third-level category
-                                image_path = (
-                                    os.path.join(path_of_images, category_level1, category_level2, category_level3,
-                                                 image_filename)).replace("\\", "/")
-                                image = {
-                                    "category_level1": category_level1,
-                                    "filename": image_path
-                                }
-                                first_category_images[category_level1] = image
-                                break  # Only select the first image for each first-level category
-                    if category_level1 in first_category_images:  # If we found an image for the first-level category, stop the loop
-                        break
-    # Randomly select some images for the random section
-    num_random_images = 12  # You can adjust the number of random images to display
-    if len(images) < 12:
-        random_images = images
-    else:
-        random_images = random.sample(images, num_random_images)
-    return render_template("index.html", first_category_images=first_category_images, random_images=random_images)
-
-
-@app.route('/second/<string:first_level_category>')
-def second_and_third_level_category(first_level_category):
-    user_agent = request.user_agent
+    mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
+    user_agent = request.headers.get('User-Agent')
     print(user_agent)
-    print(user_agent.platform)
-    if user_agent.platform:
-        print(user_agent.browser)
-    else:
-        pass
-    third_category_images = {}  # Dictionary to store first-level category names and their images
-    if os.path.isdir(os.path.join(image_folder, first_level_category)):
-        for category_level2 in os.listdir(os.path.join(image_folder, first_level_category)):
-            level3_list = []
-            if os.path.isdir(os.path.join(image_folder, first_level_category, category_level2)):
-                for category_level3 in os.listdir(os.path.join(image_folder, first_level_category, category_level2)):
+    new_num = 10
+    for keyword in mobile_keywords:
+        if keyword in user_agent:
+            is_mobile = True
+            new_num = 6
+            break
 
-                    if os.path.isdir(
-                            os.path.join(image_folder, first_level_category, category_level2, category_level3)):
-                        image_files = os.listdir(
-                            os.path.join(image_folder, first_level_category, category_level2, category_level3))
-                        if image_files:
-                            image_filename = image_files[0]  # Get the first image in the third-level category
-                            image_path = (
-                                os.path.join(path_of_images, first_level_category, category_level2, category_level3,
-                                             image_filename)).replace("\\", "/")
-                            image = {
-                                "category_level1": first_level_category,
-                                "category_level2": category_level2,
-                                "category_level3": category_level3,
-                                "filename": image_path
-                            }
-                            level3_list.append(image)
-                third_category_images[category_level2] = level3_list
-    return render_template("second.html",
-                           first_level_category=first_level_category, third_category_images=third_category_images
-                           )
+    conn = utils.get_conn()
+    coll = utils.get_collect(conn, utils.coll)
+    res = list(coll.find().sort('create_time', -1).limit(new_num))
+    res_random = coll.aggregate([{'$sample': {'size': 12}}])
+    print(res)
+    return render_template("index.html", first_category_images=res, random_images=res_random)
+
+
+@app.route('/more')
+def more(page=1):
+    mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
+    user_agent = request.headers.get('User-Agent')
+    print(user_agent)
+    page = int(request.args.get("page", 1))
+    new_num = 10
+    all_num = 100
+    for keyword in mobile_keywords:
+        if keyword in user_agent:
+            new_num = 12
+            all_num = 96
+            break
+
+    conn = utils.get_conn()
+    coll = utils.get_collect(conn, utils.coll)
+    res = list(coll.find().sort('create_time', -1).limit(all_num).skip(new_num))
+    start_idx = (page - 1) * new_num
+    end_idx = start_idx + new_num
+    paginated_images = res[start_idx:end_idx]
+    total_pages = (len(res) + new_num - 1) // new_num
+    return render_template("preview.html", images=paginated_images, page=page, total_pages=total_pages,
+                           cate='最新图片', page_name='more')
+
+
+@app.route('/category')
+def category():
+    cates = utils.get_redis_cates()
+    conn = utils.get_conn()
+    coll = utils.get_collect(conn, utils.coll)
+    data = []
+    for cate in cates:
+        conf_data = utils.select_by_cate(coll, cate, one=True)
+        data.append(conf_data)
+    print("a", sorted(cates))
+    print(data)
+    return render_template('category.html', cate=data)
 
 
 if __name__ == '__main__':

@@ -1,26 +1,25 @@
-<!DOCTYPE HTMLPUBLIC "-//W3C//DTD HTML4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
-
 <head>
     <link href="../static/favicon.ico" rel="shortcut icon" type="image/x-icon">
-
-    <title>Image Gallery</title>
+    <title>分类</title>
     <style>
-        h2 {
-            font-size: 30px;
-            padding-top: 6%;
-        }
-
         body {
             display: flex;
             flex-direction: column;
-            align-items: center;
+            /*align-items: center;*/
             background-color: black; /* Set the background color to black */
             color: orange;
         }
 
         h1 {
             margin-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: black; /* Set the background color to black */
+            color: orange;
+            font-size: 50px;
         }
 
         .image-container img {
@@ -39,6 +38,14 @@
         .home-image-container {
             margin: 10px;
             padding: 0;
+            width: 20%;
+            height: 10%;
+            overflow: hidden;
+        }
+
+        .home-image-container.active {
+            margin: 10px;
+            padding: 0;
             width: 280px;
             height: 420px;
             overflow: hidden;
@@ -46,31 +53,34 @@
 
         .home-image-container img {
             width: 100%;
-            height: 100%;
+            height: 88%;
             display: block;
             object-fit: cover;
         }
 
         .home-image-container p {
             width: 100%;
-            height: 10%;
+            height: 12%;
             display: block;
             object-fit: cover;
             font-size: 20px;
-            margin-top: 10px;
         }
 
-        .random-images-container {
+        .flax_image {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
 
-        .random-image-container {
-            margin: 10px;
-            width: 200px;
-            height: 250px;
-            overflow: hidden;
+        .random-images-container {
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .random-images-container h2 {
+        {#width: 10%;#} word-break: break-all;
+            margin-left: 10px;
+            font-size: 30px;
         }
 
         .random-image-container img {
@@ -83,6 +93,7 @@
         .category-name {
             text-align: center;
             font-weight: bold;
+
         }
 
         /* 添加导航栏样式 */
@@ -185,23 +196,6 @@
 
         }
 
-        .layout1 {
-            width: 0;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.9);
-            z-index: 996;
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-        {#transition: width 0.3s ease-in-out;#}
-        }
-
-        .layout1.active {
-            width: 100%;
-
-        }
-
         .nav-search input[type="text"].active {
 
             padding: 5px;
@@ -212,23 +206,6 @@
             background-color: orange;
             height: 30px;
             border-radius: 5px;
-        }
-
-        .more {
-            color: orange;
-            font-size: 18px;
-            text-decoration: none;
-        }
-
-        .big_img {
-        {#top: 0;#}{#left: 0;#} z-index: 1000;
-            display: none;
-        {#width: 100%;#} height: 100%;
-            position: fixed;
-        }
-
-        .big_img.active {
-            display: block;
         }
     </style>
 </head>
@@ -247,42 +224,28 @@
     <a href="{{ url_for('home' ) }}" id="home_page">
         <div>首页</div>
     </a>
-    <a href="{{ url_for('category' ) }}">分类</a>
+    <a href="#">分类</a>
 
 </div>
-<div class="layout" id="layout" onclick="toggleNavMenu()"></div>
-<!-- 遮罩层 -->
-<div class="layout1" id="layout1" onclick="showBigImg()"> <!-- 遮罩层1 -->
+<div class="layout" id="layout" onclick="toggleNavMenu()"> <!-- 遮罩层 -->
 </div>
-<h2>
-    最新图片
-</h2>
+<h1>分类</h1>
 <div class="random-images-container">
-
-    {% for  image in first_category_images %}
-        <div class="home-image-container">
-            <a onclick="showBigImg('{{ image.image_path }}')">
-                <img src="{{ image.thumbnail_path }}" alt="{{ image.cate }}">
-            </a>
-        </div>
-    {% endfor %}
+    <div class="flax_image">
+        {% for item in cate %}
+            <div class="home-image-container">
+                <a href="{{ url_for('preview', cate=item.cate) }}">
+                    <img src="{{ item.thumbnail_path }}">
+                </a>
+                <p class="category-name">{{ item.cate }}</p>
+            </div>
+        {% endfor %}
+    </div>
 </div>
-<a href="{{ url_for('more')}}" class="more">查看更多</a>
-<h2>
-    随机图片
-</h2>
-<!--    <h2>Random Images</h2>-->
-<div class="random-images-container">
-    {% for image in random_images %}
-        <div class="random-image-container">
-            <a onclick="showBigImg('{{ image.image_path }}')">
-                <img src="{{ image.thumbnail_path }}" alt="{{ image.thumbnail_path }}">
-            </a>
-        </div>
-    {% endfor %}
-</div>
-<img class="big_img" src="" id="big_img" onclick="showBigImg()">
 <script>
+    function isMobileDevice() {
+        return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    }
     // 切换导航栏展开状态
     function toggleNavMenu() {
         var navMenu = document.getElementById('navMenu');
@@ -292,17 +255,18 @@
         var search_input = document.getElementById('search_input');
         search_input.classList.toggle('active');
     }
+    if (isMobileDevice()) {
+        console.log("用户使用移动设备访问");
+        var zzc = document.getElementsByClassName('home-image-container');
+        for (var i = 0; i < zzc.length; i++) {
+            zzc[i].classList.toggle('active');
+        }
+    } else {
+        console.log("用户使用 PC 访问");
 
-    function showBigImg(filename) {
-        var big_img = document.getElementById('big_img');
-        big_img.classList.toggle('active');
-        big_img.src = filename;
-        var zzc = document.getElementById('layout1');
-        zzc.classList.toggle('active');
-        console.log(filename);
     }
 
-    var inputElement = document.getElementById("search_input");
+     var inputElement = document.getElementById("search_input");
 
     // 添加回车事件的监听器
     inputElement.addEventListener("keyup", function (event) {

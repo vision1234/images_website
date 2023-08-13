@@ -2,10 +2,10 @@
 <html>
 <head>
     <link href="../static/favicon.ico" rel="shortcut icon" type="image/x-icon">
-    <title>{{first_level_category}}-{{second_level_category}}-{{third_level_category}}</title>
+    <title>{{ cate }}</title>
     <style>
         /* 简单的样式用于展示图片 */
-       body {
+        body {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -16,11 +16,13 @@
         h1 {
             margin-top: 20px;
         }
-        .image_body{
+
+        .image_body {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
         }
+
         .image-container {
             float: left;
             margin: 10px;
@@ -39,36 +41,243 @@
         }
 
         .pagination {
-            clear:both;
+            clear: both;
             display: flex;
             justify-content: center;
             margin-top: 20px;
         }
 
-        .pagination a {
-            margin: 0 5px;
+       .pagination a {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: rgba(255, 255, 255, 0.2);
+            color: white;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+            margin-bottom:15px;
+           margin-right: 5px;
         }
+        .pagination a:hover {
+            background-color: rgba(255, 255, 255, 0.4);
+        }
+         /* 添加导航栏样式 */
+        .nav-container {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+        {#background-color: orange;#} padding: 10px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6%;
+            z-index: 997;
+        }
+
+        .nav-button {
+        {#cursor: pointer;#} padding: 5px 10px;
+            background-color: rgba(0, 0, 0, 0);
+            border: none;
+            color: white;
+            font-size: 27px;
+            margin-right: 10px;
+        }
+
+        .nav-menu {
+            display: block;
+            background-color: rgba(0, 0, 0, 0.5);
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 100%;
+            z-index: 999;
+            padding-top: 16%;
+            padding-left: 0;
+            padding-right: 0;
+            transition: width 0.3s ease-in-out;
+            font-size: 0;
+
+        }
+
+        .nav-menu a {
+            display: flex;
+            justify-content: center;
+            color: white;
+        {#font-size: 18px;#} text-decoration: none;
+            margin-bottom: 20px;
+            align-items: center;
+            padding: 0;
+        }
+
+        {# .nav-menu a div{#}
+        {#    display: inline;#}
+        .nav-search {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .nav-search input[type="text"] {
+            flex: 1;
+        {#padding: 5px;#} padding: 0;
+            font-size: 18px;
+            width: 10%;
+            border-radius: 5px;
+            border: 1px;
+            height: 30px;
+            margin-bottom: 20px;
+            color: orange;
+            caret-color: orange;
+        }
+
+
+        /* 导航栏展开时的样式 */
+        .nav-menu.active {
+        {#display: block;#} width: 30%;
+            padding-left: 20px;
+            padding-right: 20px;
+            font-size: 17px;
+            border: 1px;
+
+        }
+
+        .layout {
+            width: 0;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            transition: width 0.3s ease-in-out;
+        }
+
+        .layout.active {
+            width: 100%;
+
+        }
+
+        .nav-search input[type="text"].active {
+
+            padding: 5px;
+
+        }
+
+        .nav-menu a {
+            background-color: orange;
+            height: 30px;
+            border-radius: 5px;
+        }
+          .big_img {
+        {#top: 0;#}{#left: 0;#} z-index: 1000;
+            display: none;
+        {#width: 100%;#} height: 100%;
+            position: fixed;
+        }
+
+        .big_img.active {
+            display: block;
+        }
+         .layout1 {
+            width: 0;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 996;
+            display: block;
+            position: fixed;
+            top: 0;
+            left: 0;
+            {#transition: width 0.3s ease-in-out;#}
+        }
+
+        .layout1.active {
+            width: 100%;
+
+        }
+
     </style>
 </head>
 <body>
-    <h1>{{first_level_category}}-{{second_level_category}}-{{third_level_category}}</h1>
-    <div class="image_body">
-        {% for image in images %}
+<div class="nav-container">
+    <button class="nav-button" onclick="toggleNavMenu()">☰</button> <!-- 添加导航栏按钮 -->
+    <div class="h1_par">
+    </div>
+</div>
+{#<h1>图片分享站</h1>#}
+<div class="nav-menu" id="navMenu"> <!-- 导航栏内容 -->
+    <div class="nav-search">
+        <input type="text" id="search_input" placeholder="请输入搜索关键词">
+    </div>
+    <a href="{{ url_for('home' ) }}" id="home_page">
+        <div>首页</div>
+    </a>
+    <a href="{{ url_for('category' ) }}">分类</a>
+
+</div>
+<div class="layout" id="layout" onclick="toggleNavMenu()"></div>
+<!-- 遮罩层 -->
+<div class="layout1" id="layout1" onclick="showBigImg()"> <!-- 遮罩层1 -->
+</div>
+<h1>{{ cate }}</h1>
+<div class="image_body">
+    {% for image in images %}
         <div class="image-container">
-            <a href="{{ url_for('image_detail', image_path=image.filename) }}">
-                <img src="{{ url_for('static', filename=image.filename) }}" alt="{{ image.title }}">
+            <a onclick="showBigImg('{{ '/'+image.image_path }}')">
+                <img src="{{ '/'+image.thumbnail_path}}">
             </a>
-            <p>{{ image.title }}</p>
+            {#            <p>{{ image.title }}</p>#}
         </div>
-        {% endfor %}
-    </div>
-    <div class="pagination">
-        {% if page > 1 %}
-            <a href="{{ url_for('preview', page=page-1,first_level_category=first_level_category,second_level_category=second_level_category,third_level_category=third_level_category) }}">Previous</a>
-        {% endif %}
-        {% if page < total_pages %}
-            <a href="{{ url_for('preview', page=page+1,first_level_category=first_level_category,second_level_category=second_level_category,third_level_category=third_level_category) }}">Next</a>
-        {% endif %}
-    </div>
+    {% endfor %}
+</div>
+<img class="big_img" src="" id="big_img" onclick="showBigImg()">
+<div class="pagination">
+    {% if page > 1 %}
+        <a href="{{ url_for(page_name, page=page-1,cate=cate) }}">上一页</a>
+    {% endif %}
+    {% if page < total_pages %}
+        <a href="{{ url_for(page_name, page=page+1,cate=cate) }}">下一页</a>
+    {% endif %}
+</div>
+<script>
+    // 切换导航栏展开状态
+    function toggleNavMenu() {
+        var navMenu = document.getElementById('navMenu');
+        navMenu.classList.toggle('active');
+        var zzc = document.getElementById('layout');
+        zzc.classList.toggle('active');
+        var search_input = document.getElementById('search_input');
+        search_input.classList.toggle('active');
+    }
+
+    function showBigImg(filename) {
+        var big_img = document.getElementById('big_img');
+        big_img.classList.toggle('active');
+        big_img.src = filename;
+        var zzc = document.getElementById('layout1');
+        zzc.classList.toggle('active');
+        console.log(filename);
+    }
+    var inputElement = document.getElementById("search_input");
+
+    // 添加回车事件的监听器
+    inputElement.addEventListener("keyup", function (event) {
+        // 使用 event.key === "Enter" 来判断是否按下回车键
+        if (event.key === "Enter") {
+
+            // 获取输入框的值
+            var inputValue = document.getElementById("search_input").value;
+
+            // 构建目标 URL，将输入值作为查询参数传递
+            var targetUrl = "/search/"+encodeURIComponent(inputValue);
+
+            // 跳转到目标 URL
+            window.location.href = targetUrl;
+        }
+    });
+</script>
 </body>
 </html>

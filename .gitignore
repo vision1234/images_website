@@ -7,3 +7,4 @@ static/images/**/*.psd
 static/images/**/*.gif
 .idea/
 __pycache__/
+config.py
