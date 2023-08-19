@@ -40,7 +40,7 @@ def index():
             thumbnail_path_ = os.path.join(thumbnail_path, file.filename)
             file.save(target_file_path)
             generate_thumbnail(target_file_path, thumbnail_path_)
-            update_mongo(coll, target_file_path, thumbnail_path, cate, tags)
+            update_mongo(coll, target_file_path, thumbnail_path_, cate, tags)
         return '文件上传成功！'
     else:
         # tags = utils.get_redis_tags()
