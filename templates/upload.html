@@ -146,29 +146,34 @@
 <script>
     function previewFiles() {
         alert("666")
-        const previewContainer = document.getElementById('previewContainer');
-        const fileInput = document.getElementById('file');
-        previewContainer.innerHTML = ''; // Clear previous previews
+        try {
+            const previewContainer = document.getElementById('previewContainer');
+            const fileInput = document.getElementById('file');
+            previewContainer.innerHTML = ''; // Clear previous previews
 
-        const files = fileInput.files;
+            const files = fileInput.files;
 
-        for (let file of files) {
-            let reader = new FileReader();
-            reader.onloadend = function () {
-                let img = document.createElement('img');
-                img.src = reader.result;
-                img.className = 'preview-img';
-                previewContainer.appendChild(img);
-            };
-            if (file) {
-                reader.readAsDataURL(file);
+            for (let file of files) {
+                let reader = new FileReader();
+                reader.onloadend = function () {
+                    let img = document.createElement('img');
+                    img.src = reader.result;
+                    img.className = 'preview-img';
+                    previewContainer.appendChild(img);
+                };
+                if (file) {
+                    reader.readAsDataURL(file);
+                }
+            }
+
+            if (files.length > 0) {
+                previewContainer.style.display = 'inline-table';
+            } else {
+                previewContainer.style.display = 'none';
             }
         }
-
-        if (files.length > 0) {
-            previewContainer.style.display = 'inline-table';
-        } else {
-            previewContainer.style.display = 'none';
+        catch (e){
+            alert(e.message);
         }
     }
 
