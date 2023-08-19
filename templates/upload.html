@@ -152,7 +152,7 @@
             previewContainer.innerHTML = ''; // Clear previous previews
 
             const files = fileInput.files;
-
+            alert(files.length)
             for (let file of files) {
                 let reader = new FileReader();
                 reader.onloadend = function () {
@@ -175,7 +175,7 @@
         catch (e){
             alert(e.message);
         }
-        alert("66")
+
     }
 
     function uploadFile(event) {
