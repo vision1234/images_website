@@ -145,10 +145,11 @@
 <!-- JavaScript 代码 -->
 <script>
     function previewFiles() {
+        alert("666")
         const previewContainer = document.getElementById('previewContainer');
         const fileInput = document.getElementById('file');
         previewContainer.innerHTML = ''; // Clear previous previews
-        alert("666")
+
         const files = fileInput.files;
 
         for (let file of files) {
