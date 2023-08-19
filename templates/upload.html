@@ -127,7 +127,7 @@
 <div id="uploadContainer">
     <form action="/" method="post" enctype="multipart/form-data" onsubmit="uploadFile(event)">
         <label for="file">选择文件：</label>
-        <input type="file" name="file" id="file" oninput="previewFiles()"  accept="image/*" >
+        <input type="file" name="file" id="file" oninput="previewFiles()" accept="image/*">
         <label for="cate">分类：</label>
         {#        <input type="text" name="cate" id="cate" required placeholder="逗号或空格分割">#}
         <select name="cate" id="cate" required>
@@ -138,7 +138,7 @@
         <label for="tag">标签：</label>
         <input type="text" name="tag" id="tag" required placeholder="逗号分割 如刻晴,甘雨">
         <input type="submit" value="上传">
-        <span id="uploadStatus">文件上传成功！</span>
+        <span id="uploadStatus" style="display: none;">文件上传中...</span>
     </form>
 </div>
 
@@ -148,12 +148,13 @@
     const isWeChat = ua.includes('micromessenger');
     const fileInput = document.getElementById('file');
     if (isWeChat) {
-            {#fileInput.setAttribute('type', 'radio'); // 在微信中改为单选#}
-            fileInput.removeAttribute('multiple'); // 移除多选属性
-        } else {
-            {#fileInput.setAttribute('type', 'file'); // 在非微信中还原为文件选择#}
-            fileInput.setAttribute('multiple', 'multiple'); // 添加多选属性
-        }
+        {#fileInput.setAttribute('type', 'radio'); // 在微信中改为单选#}
+        fileInput.removeAttribute('multiple'); // 移除多选属性
+    } else {
+        {#fileInput.setAttribute('type', 'file'); // 在非微信中还原为文件选择#}
+        fileInput.setAttribute('multiple', 'multiple'); // 添加多选属性
+    }
+
     function previewFiles() {
         try {
             const previewContainer = document.getElementById('previewContainer');
@@ -179,8 +180,7 @@
             } else {
                 previewContainer.style.display = 'none';
             }
-        }
-        catch (e){
+        } catch (e) {
             alert(e.message);
         }
 
@@ -199,7 +199,8 @@
             alert('请选择图片文件进行上传！');
             return;
         }
-
+        const uploadStatus = document.getElementById('uploadStatus');
+        uploadStatus.style.display = 'inline'; // 显示"上传中..."消息
         fetch(form.action, {
             method: 'POST',
             body: formData
@@ -207,15 +208,18 @@
             .then(response => response.text())
             .then(data => {
                 // Show the upload success message
-                const uploadStatus = document.getElementById('uploadStatus');
-                uploadStatus.style.display = 'inline';
-
-                // Hide the upload success message after 2 seconds
+                uploadStatus.textContent = '文件上传成功！'; // 更新消息内容
                 setTimeout(function () {
-                    uploadStatus.style.display = 'none';
-                }, 10000);
+                    uploadStatus.style.display = 'none'; // 隐藏消息
+                }, 10000); // 设置显示时间
             })
-            .catch(error => console.error('Error:', error));
+            .catch(error => {
+                console.error('Error:', error);
+                uploadStatus.textContent = '文件上传失败！'; // 更新消息内容
+                setTimeout(function () {
+                    uploadStatus.style.display = 'none'; // 隐藏消息
+                }, 10000); // 设置显示时间
+            });
     }
 
 </script>
