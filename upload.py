@@ -16,39 +16,35 @@ app.config['GENERATE_FOLDER'] = 'static/thumbnail'
 def index():
     if request.method == 'POST':
         # 获取上传的文件和表单数据
-        file = request.files['file']
+        if "file" not in request.files:
+            return "没有选择文件"
         cate = request.form['cate']
         tag = request.form['tag']
         tags = tag.replace("，", ",").split(",")
         thumbnail_path = os.path.join(app.config['GENERATE_FOLDER'], cate)
-        # print(os.path.join(app.config['UPLOAD_FOLDER'], cate, tag))
-        # 检查是否选择了三级目录
-        # if not directory1 or not directory2 or not directory3:
-        #     return '请填写完整的目录信息！'
-
+        images = request.files.getlist('file')
         # 创建目录（如果不存在）
         target_directory = os.path.join(app.config['UPLOAD_FOLDER'], cate)
         os.makedirs(target_directory, exist_ok=True)
         os.makedirs(thumbnail_path, exist_ok=True)
-        # Check if a file with the same name exists in the target directory
-        filename, file_extension = os.path.splitext(file.filename)
-        timestamp = str(int(time.time()))
-        target_file_path = os.path.join(target_directory, file.filename)
-        if os.path.exists(target_file_path):
-            file.filename = f"{filename}_{timestamp}{file_extension}"
-
-        target_file_path = os.path.join(target_directory, file.filename)
-        thumbnail_path = os.path.join(thumbnail_path, file.filename)
-        file.save(target_file_path)
-        generate_thumbnail(target_file_path, thumbnail_path)
-        update_mongo(target_file_path, thumbnail_path, cate, tags)
+        conn = utils.get_conn()
+        coll = utils.get_collect(conn, utils.coll)
+        for file in images:
+            # Check if a file with the same name exists in the target directory
+            filename, file_extension = os.path.splitext(file.filename)
+            timestamp = str(int(time.time()))
+            target_file_path = os.path.join(target_directory, file.filename)
+            if os.path.exists(target_file_path):
+                file.filename = f"{filename}_{timestamp}{file_extension}"
+            target_file_path = os.path.join(target_directory, file.filename)
+            thumbnail_path_ = os.path.join(thumbnail_path, file.filename)
+            file.save(target_file_path)
+            generate_thumbnail(target_file_path, thumbnail_path_)
+            update_mongo(coll, target_file_path, thumbnail_path, cate, tags)
         return '文件上传成功！'
     else:
         # tags = utils.get_redis_tags()
         cates = utils.get_redis_cates()
-        # conn = utils.get_conn()
-        # coll = utils.get_collect(conn, "upload_info")
-        # conf_data = coll.find_one()
         return render_template('upload.html', cate=cates)
 
 
@@ -89,9 +85,7 @@ def generate_thumbnail(input_image_path, output_image_path, target_size=(372, 55
         # 使用示例
 
 
-def update_mongo(image_path, thumbnail_path, cate, tag):
-    conn = utils.get_conn()
-    coll = utils.get_collect(conn, utils.coll)
+def update_mongo(coll, image_path, thumbnail_path, cate, tag):
     data = {
         "image_path": image_path.replace("\\", "/"),
         "thumbnail_path": thumbnail_path.replace("\\", "/"),
