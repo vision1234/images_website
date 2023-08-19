@@ -127,7 +127,7 @@
 <div id="uploadContainer">
     <form action="/" method="post" enctype="multipart/form-data" onsubmit="uploadFile(event)">
         <label for="file">选择文件：</label>
-        <input type="file" name="file" id="file" onchange="previewFiles()"  accept="image/*" multiple>
+        <input type="file" name="file" id="file" oninput="previewFiles()"  accept="image/*" multiple>
         <label for="cate">分类：</label>
         {#        <input type="text" name="cate" id="cate" required placeholder="逗号或空格分割">#}
         <select name="cate" id="cate" required>
