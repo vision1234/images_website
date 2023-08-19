@@ -149,10 +149,10 @@
         try {
             const previewContainer = document.getElementById('previewContainer');
             const fileInput = document.getElementById('file');
+            alert(fileInput)
             previewContainer.innerHTML = ''; // Clear previous previews
 
             const files = fileInput.files;
-            alert(files.length)
             for (let file of files) {
                 let reader = new FileReader();
                 reader.onloadend = function () {
