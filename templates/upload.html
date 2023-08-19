@@ -144,6 +144,16 @@
 
 <!-- JavaScript 代码 -->
 <script>
+    const ua = window.navigator.userAgent.toLowerCase();
+    const isWeChat = ua.includes('micromessenger');
+    const fileInput = document.getElementById('file');
+    if (isWeChat) {
+            fileInput.setAttribute('type', 'radio'); // 在微信中改为单选
+            fileInput.removeAttribute('multiple'); // 移除多选属性
+        } else {
+            fileInput.setAttribute('type', 'file'); // 在非微信中还原为文件选择
+            fileInput.setAttribute('multiple', 'multiple'); // 添加多选属性
+        }
     function previewFiles() {
         try {
             const previewContainer = document.getElementById('previewContainer');
