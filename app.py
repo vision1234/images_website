@@ -106,15 +106,17 @@ def more(page=1):
     page = int(request.args.get("page", 1))
     new_num = 10
     all_num = 100
+    skip_size = 10
     for keyword in mobile_keywords:
         if keyword in user_agent:
             new_num = 12
             all_num = 96
+            skip_size = first_page_size
             break
 
     conn = utils.get_conn()
     coll = utils.get_collect(conn, utils.coll)
-    res = list(coll.find().sort('create_time', -1).limit(all_num).skip(first_page_size))
+    res = list(coll.find().sort('create_time', -1).limit(all_num).skip(skip_size))
     start_idx = (page - 1) * new_num
     end_idx = start_idx + new_num
     paginated_images = res[start_idx:end_idx]
