@@ -12,6 +12,7 @@ path_of_images = "images"
 path_of_thumbnail = "thumbnail"
 images_per_page = 12  # 每页显示12张图片
 images_per_page_pc = 10
+first_page_size = 6
 
 
 # 预览页，显示分类的图片列表，两张一行，带分页
@@ -87,7 +88,7 @@ def home():
     for keyword in mobile_keywords:
         if keyword in user_agent:
             is_mobile = True
-            new_num = 6
+            new_num = first_page_size
             break
 
     conn = utils.get_conn()
@@ -114,7 +115,7 @@ def more(page=1):
 
     conn = utils.get_conn()
     coll = utils.get_collect(conn, utils.coll)
-    res = list(coll.find().sort('create_time', -1).limit(all_num).skip(new_num))
+    res = list(coll.find().sort('create_time', -1).limit(all_num).skip(new_num * page - 1 + first_page_size))
     start_idx = (page - 1) * new_num
     end_idx = start_idx + new_num
     paginated_images = res[start_idx:end_idx]
