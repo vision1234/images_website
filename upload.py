@@ -91,7 +91,7 @@ def update_mongo(coll, image_path, thumbnail_path, cate, tag):
         "thumbnail_path": thumbnail_path.replace("\\", "/"),
         "cate": cate,
         "tag": tag,
-        "create_time": arrow.now().datetime
+        "create_time": arrow.now().to('Asia/Shanghai').datetime
     }
     utils.add_one_data(coll, data)
 
