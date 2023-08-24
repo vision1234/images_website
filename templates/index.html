@@ -232,6 +232,23 @@
         .big_img.active {
             display: block;
         }
+        .floating-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 16px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .show {
+            opacity: 1;
+        }
     </style>
 </head>
 <body>
@@ -284,6 +301,7 @@
     {% endfor %}
 </div>
 <img class="big_img" src="" id="big_img" onclick="showBigImg()" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
+<h2 class="floating-text">这是本页最后一张了</h2>>
 <script>
     let touchStartX;
     let touchEndX;
@@ -318,11 +336,11 @@
 
         // 限制图片索引的范围
         if(currentImageIndex>=totalImages) {
-            currentImageIndex = totalImages-1
-            var alertTimeout = setTimeout(function() {
-                // 关闭 alert
-                clearTimeout(alertTimeout);
-                window.alert("这是本页最后一张了");
+            var floatingText = document.querySelector('.floating-text');
+            floatingText.classList.add('show');
+
+            setTimeout(function() {
+                floatingText.classList.remove('show');
             }, 1000); // 1000 毫秒 = 1 秒
         }
 
