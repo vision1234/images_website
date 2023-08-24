@@ -263,7 +263,7 @@
 
     {% for  image in first_category_images %}
         <div class="home-image-container">
-            <a onclick="showBigImg('{{ image.image_path }}')">
+            <a onclick="showBigImg('{{ image.image_path }}','new')">
                 <img src="{{ image.thumbnail_path }}" alt="{{ image.cate }}">
             </a>
         </div>
@@ -277,7 +277,7 @@
 <div class="random-images-container">
     {% for image in random_images %}
         <div class="random-image-container">
-            <a onclick="showBigImg('{{ image.image_path }}')">
+            <a onclick="showBigImg('{{ image.image_path }}','random')">
                 <img src="{{ image.thumbnail_path }}" alt="{{ image.thumbnail_path }}">
             </a>
         </div>
@@ -287,7 +287,7 @@
 <script>
     let touchStartX;
     let touchEndX;
-
+    let img_flag="new"
     function handleTouchStart(event) {
         touchStartX = event.touches[0].clientX;
     }
@@ -309,7 +309,11 @@
         currentImageIndex += offset;
 
         // 获取所有图片元素
-        const images = document.querySelectorAll('.random-image-container img');
+        if(img_flag==="new"){
+            let images = document.querySelectorAll('.home-image-container img');
+        }else {
+            let images = document.querySelectorAll('.random-image-container img');
+        }
         const totalImages = images.length;
 
         // 限制图片索引的范围
@@ -329,7 +333,8 @@
         search_input.classList.toggle('active');
     }
 
-    function showBigImg(filename) {
+    function showBigImg(filename,flag) {
+        img_flag=flag;
         var big_img = document.getElementById('big_img');
         big_img.classList.toggle('active');
         big_img.src = filename;
