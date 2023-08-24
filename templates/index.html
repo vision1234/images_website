@@ -307,12 +307,12 @@
 
     function showNextImage(offset) {
         currentImageIndex += offset;
-
+        let images;
         // 获取所有图片元素
         if(img_flag==="new"){
-            let images = document.querySelectorAll('.home-image-container img');
+            images = document.querySelectorAll('.home-image-container img');
         }else {
-            let images = document.querySelectorAll('.random-image-container img');
+            images = document.querySelectorAll('.random-image-container img');
         }
         const totalImages = images.length;
 
