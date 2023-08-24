@@ -263,7 +263,7 @@
 
     {% for  image in first_category_images %}
         <div class="home-image-container">
-            <a onclick="showBigImg('{{ image.image_path }}','new')">
+            <a onclick="showBigImg('{{ image.image_path }}','new',{{ loop.index0 }})" alt='{{ image.image_path }}'>
                 <img src="{{ image.thumbnail_path }}" alt="{{ image.cate }}">
             </a>
         </div>
@@ -277,7 +277,7 @@
 <div class="random-images-container">
     {% for image in random_images %}
         <div class="random-image-container">
-            <a onclick="showBigImg('{{ image.image_path }}','random')">
+            <a onclick="showBigImg('{{ image.image_path }}','random',{{ loop.index0 }})" alt='{{ image.image_path }}'>
                 <img src="{{ image.thumbnail_path }}" alt="{{ image.thumbnail_path }}">
             </a>
         </div>
@@ -310,18 +310,20 @@
         let images;
         // 获取所有图片元素
         if(img_flag==="new"){
-            images = document.querySelectorAll('.home-image-container img');
+            images = document.querySelectorAll('.home-image-container a');
         }else {
-            images = document.querySelectorAll('.random-image-container img');
+            images = document.querySelectorAll('.random-image-container a');
         }
         const totalImages = images.length;
 
         // 限制图片索引的范围
-        currentImageIndex = (currentImageIndex + totalImages) % totalImages;
+        if(currentImageIndex>=totalImages) {
+            currentImageIndex = totalImages-1
+        }
 
         // 更新大图元素的 src
         const bigImg = document.getElementById('big_img');
-        bigImg.src = images[currentImageIndex].src;
+        bigImg.src = images[currentImageIndex].alt;
     }
     // 切换导航栏展开状态
     function toggleNavMenu() {
@@ -333,7 +335,8 @@
         search_input.classList.toggle('active');
     }
 
-    function showBigImg(filename,flag) {
+    function showBigImg(filename,flag,index) {
+        currentImageIndex=index;
         img_flag=flag;
         var big_img = document.getElementById('big_img');
         big_img.classList.toggle('active');
@@ -341,6 +344,7 @@
         var zzc = document.getElementById('layout1');
         zzc.classList.toggle('active');
         console.log(filename);
+
     }
 
     var inputElement = document.getElementById("search_input");
