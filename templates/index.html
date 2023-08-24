@@ -319,6 +319,11 @@
         // 限制图片索引的范围
         if(currentImageIndex>=totalImages) {
             currentImageIndex = totalImages-1
+            var alertTimeout = setTimeout(function() {
+                // 关闭 alert
+                clearTimeout(alertTimeout);
+                window.alert("这是本页最后一张了");
+            }, 1000); // 1000 毫秒 = 1 秒
         }
 
         // 更新大图元素的 src
