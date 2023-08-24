@@ -283,8 +283,42 @@
         </div>
     {% endfor %}
 </div>
-<img class="big_img" src="" id="big_img" onclick="showBigImg()">
+<img class="big_img" src="" id="big_img" onclick="showBigImg()" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
 <script>
+    let touchStartX;
+    let touchEndX;
+
+    function handleTouchStart(event) {
+        touchStartX = event.touches[0].clientX;
+    }
+
+    function handleTouchEnd(event) {
+        touchEndX = event.changedTouches[0].clientX;
+        const deltaX = touchEndX - touchStartX;
+
+        if (deltaX > 50) {
+            showNextImage(-1);
+        } else if (deltaX < -50) {
+            showNextImage(1);
+        }
+    }
+
+    let currentImageIndex = 0; // 当前显示的图片索引
+
+    function showNextImage(offset) {
+        currentImageIndex += offset;
+
+        // 获取所有图片元素
+        const images = document.querySelectorAll('.random-image-container img');
+        const totalImages = images.length;
+
+        // 限制图片索引的范围
+        currentImageIndex = (currentImageIndex + totalImages) % totalImages;
+
+        // 更新大图元素的 src
+        const bigImg = document.getElementById('big_img');
+        bigImg.src = images[currentImageIndex].src;
+    }
     // 切换导航栏展开状态
     function toggleNavMenu() {
         var navMenu = document.getElementById('navMenu');
