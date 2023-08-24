@@ -243,7 +243,7 @@
 <div class="image_body">
     {% for image in images %}
         <div class="image-container">
-            <a onclick="showBigImg('{{ '/'+image.image_path }}',{{ loop.index0 }})" >
+            <a onclick="showBigImg('{{ '/'+image.image_path }}',{{ loop.index0 }})" title='{{ image.image_path }}'>
                 <img src="{{ '/'+image.thumbnail_path}}">
             </a>
             {#            <p>{{ image.title }}</p>#}
@@ -285,7 +285,7 @@
         currentImageIndex += offset;
 
         // 获取所有图片元素
-        const images = document.querySelectorAll('.image-container img');
+        const images = document.querySelectorAll('.image-container a');
         const totalImages = images.length;
 
         // 限制图片索引的范围
@@ -300,7 +300,7 @@
 
         // 更新大图元素的 src
         const bigImg = document.getElementById('big_img');
-        bigImg.src = images[currentImageIndex].src;
+        bigImg.src = images[currentImageIndex].title;
     }
     // 切换导航栏展开状态
     function toggleNavMenu() {
