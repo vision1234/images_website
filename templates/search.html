@@ -246,7 +246,7 @@
 <div class="image_body">
     {% for image in images %}
         <div class="image-container">
-            <a onclick="showBigImg('{{ '/'+image.image_path }}')">
+            <a onclick="showBigImg('{{ '/'+image.image_path }}',{{ loop.index0 }})">
                 <img src="{{ '/'+image.thumbnail_path}}">
             </a>
             {#            <p>{{ image.title }}</p>#}
@@ -315,7 +315,8 @@
         search_input.classList.toggle('active');
     }
 
-    function showBigImg(filename) {
+     function showBigImg(filename,index) {
+        currentImageIndex=index;
         var big_img = document.getElementById('big_img');
         big_img.classList.toggle('active');
         big_img.src = filename;
