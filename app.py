@@ -50,7 +50,7 @@ def search(keyword, page=1):
     }
 
     # 执行查询
-    results = collection.find(query)
+    results = collection.find(query).sort('create_time', -1)
     mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
     user_agent = request.headers.get('User-Agent')
     new_num = images_per_page_pc
