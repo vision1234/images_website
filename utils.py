@@ -25,7 +25,7 @@ def select_by_cate(coll, cate, one=False):
     if one:
         return coll.find_one({'cate': cate})
     else:
-        return list(coll.find({'cate': cate}))
+        return list(coll.find({'cate': cate}).sort('create_time', -1))
 
 
 def select_by_tag(coll, tag, one=False):
