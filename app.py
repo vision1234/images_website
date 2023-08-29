@@ -38,6 +38,7 @@ def preview(cate):
 
 
 # 详情页，单张图片展示，加下载原图按钮
+@app.route('/search/', defaults={'keyword': ''})
 @app.route('/search/<string:keyword>')
 def search(keyword, page=1):
     keyword = keyword.strip()
