@@ -55,13 +55,15 @@
             border-radius: 5px;
             text-decoration: none;
             transition: background-color 0.3s ease;
-            margin-bottom:15px;
-             margin-right: 5px;
+            margin-bottom: 15px;
+            margin-right: 5px;
         }
+
         .pagination a:hover {
             background-color: rgba(255, 255, 255, 0.4);
         }
-         /* 添加导航栏样式 */
+
+        /* 添加导航栏样式 */
         .nav-container {
             display: flex;
             justify-content: flex-start;
@@ -102,10 +104,8 @@
         }
 
 
-
-
         .nav-search {
-              display: flex;
+            display: flex;
             align-items: center;
             margin-top: 200px;
             margin-bottom: 10px;
@@ -122,12 +122,13 @@
             margin-bottom: 20px;
             color: orange;
             caret-color: orange;
+            background-color: rgb(255, 255, 255, 0.5);
         }
 
 
         /* 导航栏展开时的样式 */
         .nav-menu.active {
-         width: 400px;
+            width: 400px;
             padding-left: 20px;
             padding-right: 20px;
             font-size: 32px;
@@ -154,7 +155,7 @@
 
         .nav-search input[type="text"].active {
 
-              padding: 5px;
+            padding: 5px;
             margin-left: 20px;
             margin-right: 20px;
 
@@ -162,12 +163,11 @@
         }
 
         .nav-menu a {
-             {#background-color: orange;#}
-            height: 70px;
+        {#background-color: orange;#} height: 70px;
             border-radius: 5px;
             margin-left: 20px;
             margin-right: 20px;
-             display: flex;
+            display: flex;
             justify-content: center;
             color: white;
             text-decoration: none;
@@ -175,7 +175,8 @@
             align-items: center;
             padding: 0;
         }
-          .big_img {
+
+        .big_img {
         {#top: 0;#}{#left: 0;#} z-index: 1000;
             display: none;
         {#width: 100%;#} height: 100%;
@@ -185,7 +186,8 @@
         .big_img.active {
             display: block;
         }
-         .layout1 {
+
+        .layout1 {
             width: 0;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.9);
@@ -194,13 +196,14 @@
             position: fixed;
             top: 0;
             left: 0;
-            {#transition: width 0.3s ease-in-out;#}
+        {#transition: width 0.3s ease-in-out;#}
         }
 
         .layout1.active {
             width: 100%;
 
         }
+
         .floating-text {
             z-index: 1001;
             position: fixed;
@@ -218,6 +221,11 @@
 
         .show {
             opacity: 1;
+        }
+
+        ::placeholder {
+            color: white; /* 设置提示文本的颜色为红色 */
+            opacity: 1; /* 设置不透明度，确保颜色可见 */
         }
     </style>
 </head>
@@ -247,13 +255,14 @@
     {% for image in images %}
         <div class="image-container">
             <a onclick="showBigImg('{{ '/'+image.image_path }}',{{ loop.index0 }})" title='{{ image.image_path }}'>
-                <img src="{{ '/'+image.thumbnail_path}}">
+                <img src="{{ '/'+image.thumbnail_path }}">
             </a>
             {#            <p>{{ image.title }}</p>#}
         </div>
     {% endfor %}
 </div>
-<img class="big_img" src="" id="big_img" onclick="showBigImg()" ontouchstart="handleTouchStart(event)" ontouchend="handleTouchEnd(event)">
+<img class="big_img" src="" id="big_img" onclick="showBigImg()" ontouchstart="handleTouchStart(event)"
+     ontouchend="handleTouchEnd(event)">
 <h2 class="floating-text">这是本页最后一张了</h2>
 <div class="pagination">
     {% if page > 1 %}
@@ -292,19 +301,20 @@
         const totalImages = images.length;
 
         // 限制图片索引的范围
-        if(currentImageIndex>=totalImages) {
+        if (currentImageIndex >= totalImages) {
             var floatingText = document.querySelector('.floating-text');
             floatingText.classList.add('show');
 
-            setTimeout(function() {
+            setTimeout(function () {
                 floatingText.classList.remove('show');
             }, 1000); // 1000 毫秒 = 1 秒
         }
 
         // 更新大图元素的 src
         const bigImg = document.getElementById('big_img');
-        bigImg.src = "/"+images[currentImageIndex].title;
+        bigImg.src = "/" + images[currentImageIndex].title;
     }
+
     // 切换导航栏展开状态
     function toggleNavMenu() {
         var navMenu = document.getElementById('navMenu');
@@ -315,8 +325,8 @@
         search_input.classList.toggle('active');
     }
 
-     function showBigImg(filename,index) {
-        currentImageIndex=index;
+    function showBigImg(filename, index) {
+        currentImageIndex = index;
         var big_img = document.getElementById('big_img');
         big_img.classList.toggle('active');
         big_img.src = filename;
@@ -324,6 +334,7 @@
         zzc.classList.toggle('active');
         console.log(filename);
     }
+
     var inputElement = document.getElementById("search_input");
 
     // 添加回车事件的监听器
@@ -335,7 +346,7 @@
             var inputValue = document.getElementById("search_input").value;
 
             // 构建目标 URL，将输入值作为查询参数传递
-            var targetUrl = "/search/"+encodeURIComponent(inputValue);
+            var targetUrl = "/search/" + encodeURIComponent(inputValue);
 
             // 跳转到目标 URL
             window.location.href = targetUrl;
