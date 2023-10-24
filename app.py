@@ -82,6 +82,7 @@ def search(keyword, page=1):
 
 # 中间件函数，用于检查User Agent
 @app.before_request
+@app.route('/redirect')
 def check_user_agent():
     user_agent = request.headers.get('User-Agent')
     if 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent:
