@@ -80,6 +80,23 @@ def search(keyword, page=1):
         #     return redirect('/')
 
 
+# 中间件函数，用于检查User Agent
+@app.before_request
+def check_user_agent():
+    user_agent = request.headers.get('User-Agent')
+    if 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent:
+        # 如果User Agent中包含手机相关的字符串，重定向到手机用户页面
+        pass
+    else:
+        return redirect('/not_mobile_page')
+
+
+# 路由处理函数，用于处理手机用户的页面
+@app.route('/not_mobile_page')
+def mobile_page():
+    return "傻逼华为云"
+
+
 @app.route('/')
 def home():
     mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
