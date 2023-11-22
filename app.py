@@ -91,8 +91,6 @@ def check_user_agent():
         return "傻逼华为云"
 
 
-
-
 @app.route('/')
 def home():
     mobile_keywords = ['iPhone', 'Android', 'Windows Phone']
@@ -139,6 +137,15 @@ def more(page=1):
                            cate='最新图片', page_name='more')
 
 
+@app.route('/random')
+def random():
+    conn = utils.get_conn()
+    coll = utils.get_collect(conn, utils.coll)
+    res_random = list(coll.aggregate([{'$sample': {'size': 1}}]))
+    print(request.url_root+res_random[0]["image_path"])
+    return request.url_root + res_random[0]["image_path"]
+
+
 @app.route('/category')
 def category():
     cates = utils.get_redis_cates()
@@ -154,4 +161,4 @@ def category():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0',port=7009)
+    app.run(debug=True, host='0.0.0.0', port=7009)
