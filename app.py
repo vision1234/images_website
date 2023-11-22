@@ -143,7 +143,7 @@ def random():
     coll = utils.get_collect(conn, utils.coll)
     res_random = list(coll.aggregate([{'$sample': {'size': 1}}]))
     print(request.url_root+res_random[0]["image_path"])
-    return request.url_root + res_random[0]["image_path"]
+    return redirect(res_random[0]["image_path"])
 
 
 @app.route('/category')
