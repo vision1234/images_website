@@ -4,9 +4,6 @@ import os
 from config import *
 
 
-
-
-
 def get_conn():
     connection_string = f"mongodb://{username}:{password}@{hostname}:{port}/"
     conn = MongoClient(connection_string)
@@ -33,6 +30,21 @@ def select_by_tag(coll, tag, one=False):
         return coll.find_one({'cate': tag})
     else:
         return list(coll.find({'tag': tag}))
+
+
+def update_by_img_path(coll, data):
+    # 定义更新条件和新数据
+    query = {"image_path": "{}".format(data["image_path"])}
+    update_data = {"$set": {"cate": "{}".format(data["cate"]), "tag": "{}".format(data["tag"])}}
+    # 使用 update_one 方法更新数据
+    coll.update_one(query, update_data)
+
+
+def delete_by_img_path(coll, data):
+    # 定义更新条件和新数据
+    query = {"image_path": "{}".format(data["image_path"])}
+    # 使用 update_one 方法更新数据
+    coll.delete_one(query)
 
 
 def random_img(coll, num):
