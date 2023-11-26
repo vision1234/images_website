@@ -2,8 +2,10 @@ import os
 from flask import Flask, render_template, send_file, url_for, request, redirect, jsonify, json, Response
 import random
 import utils
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 # app.config['JSON_AS_ASCII'] = False
 # app.config['JSONIFY_MIMETYPE'] = "application/json;charset=utf-8"
 # 假设我们的图片文件存放在 static/images 目录下
@@ -58,7 +60,7 @@ def search():
     data = {"data": paginated_images, 'total_pages': total_pages, 'page': page}
     # return jsonify(data)
     resp = Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
-    resp.headers.add('Access-Control-Allow-Origin', '*')
+    # resp.headers.add('Access-Control-Allow-Origin', '*')
     return resp
 
 
@@ -68,8 +70,15 @@ def edit():
     data = request.json
     collection = utils.get_collect(utils.get_conn(), utils.coll)
     results = utils.update_by_img_path(collection, data)
+    if results.modified_count:
+        success = True
+    else:
+        success = False
     # return jsonify(data)
-    # return Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
+    resp = Response(json.dumps({"success": success, "modified_count": results.modified_count}, ensure_ascii=False),
+                    content_type='application/json')
+    # resp.headers.add('Access-Control-Allow-Origin', '*')
+    return resp
 
 
 # 删除api

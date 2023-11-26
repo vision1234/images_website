@@ -37,7 +37,7 @@ def update_by_img_path(coll, data):
     query = {"image_path": "{}".format(data["image_path"])}
     update_data = {"$set": {"cate": "{}".format(data["cate"]), "tag": "{}".format(data["tag"])}}
     # 使用 update_one 方法更新数据
-    coll.update_one(query, update_data)
+    return coll.update_one(query, update_data)
 
 
 def delete_by_img_path(coll, data):
