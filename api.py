@@ -21,11 +21,10 @@ first_page_size = 6
 # 搜索接口，带分类参数，参数为‘’时搜索全部
 @app.route('/search')
 def search():
-    keyword = request.args.get('keyword')
-    cate = request.args.get('cate')
-    page = request.args.get('page', 1)
-    page_size = request.args.get('page_size', images_per_page)
-    keyword = keyword.strip()
+    keyword = request.args.get('keyword', '').strip()
+    cate = request.args.get('cate', '')
+    page = int(request.args.get('page', 1))
+    page_size = int(request.args.get('page_size', images_per_page))
     collection = utils.get_collect(utils.get_conn(), utils.coll)
     query = {
         "$and": [
@@ -57,7 +56,7 @@ def search():
     paginated_images = list(results)  # data[start_idx:end_idx]
     total_pages = (data_num + new_num - 1) // new_num
     print(paginated_images)
-    data = {"data": paginated_images, 'total_pages': total_pages, 'page': page}
+    data = {"data": paginated_images, 'total_pages': total_pages, 'page': page, 'page_size': new_num}
     # return jsonify(data)
     resp = Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
     # resp.headers.add('Access-Control-Allow-Origin', '*')
