@@ -44,7 +44,7 @@ def delete_by_img_path(coll, data):
     # 定义更新条件和新数据
     query = {"image_path": "{}".format(data["image_path"])}
     # 使用 update_one 方法更新数据
-    coll.delete_one(query)
+    return coll.delete_one(query)
 
 
 def random_img(coll, num):

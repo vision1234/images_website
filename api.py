@@ -91,8 +91,15 @@ def dele():
     thumbnail_path = data["thumbnail_path"]
     os.remove(image_path)
     os.remove(thumbnail_path)
-    # return jsonify(data)
-    # return Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
+    data = {
+        "deleted_count": results.deleted_count
+    }
+    resp = Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
+    # resp.headers.add('Access-Control-Allow-Origin', '*')
+    return resp
+
+
+# return Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
 
 
 @app.route('/getCate')
