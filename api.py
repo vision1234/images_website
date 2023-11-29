@@ -94,5 +94,12 @@ def dele():
     # return Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
 
 
+@app.route('/getCate')
+def get_cate():
+    data = utils.get_redis_cates()
+    resp = Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
+    return resp
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=7010)
