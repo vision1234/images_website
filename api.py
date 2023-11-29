@@ -55,7 +55,6 @@ def search():
     results.limit(new_num).skip(start_idx)
     paginated_images = list(results)  # data[start_idx:end_idx]
     total_pages = (data_num + new_num - 1) // new_num
-    print(paginated_images)
     data = {"data": paginated_images, 'total_pages': total_pages, 'page': page, 'page_size': new_num}
     # return jsonify(data)
     resp = Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
@@ -67,6 +66,8 @@ def search():
 @app.route('/edit', methods=['POST'])
 def edit():
     data = request.json
+    data["tag"] = list(data["tag"].replace("，", ",").split(","))
+    print(data["tag"])
     collection = utils.get_collect(utils.get_conn(), utils.coll)
     results = utils.update_by_img_path(collection, data)
     if results.modified_count:

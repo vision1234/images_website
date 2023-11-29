@@ -35,7 +35,7 @@ def select_by_tag(coll, tag, one=False):
 def update_by_img_path(coll, data):
     # 定义更新条件和新数据
     query = {"image_path": "{}".format(data["image_path"])}
-    update_data = {"$set": {"cate": "{}".format(data["cate"]), "tag": "{}".format(data["tag"])}}
+    update_data = {"$set": {"cate": data["cate"], "tag": data["tag"]}}
     # 使用 update_one 方法更新数据
     return coll.update_one(query, update_data)
 
