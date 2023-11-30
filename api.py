@@ -109,5 +109,16 @@ def get_cate():
     return resp
 
 
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.json
+    if data.get('username', '') == 'admin':
+        if data.get('password', '') == utils.get_manage_pass().decode('utf-8'):
+            return {"success": True}
+        else:
+            print(utils.get_manage_pass().decode('utf-8'))
+    return {"success": False}
+
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0', port=7010)
