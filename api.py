@@ -112,12 +112,14 @@ def get_cate():
 @app.route('/login', methods=['POST'])
 def login():
     data = request.json
+    res_data = {"success": False}
     if data.get('username', '') == 'admin':
         if data.get('password', '') == utils.get_manage_pass().decode('utf-8'):
-            return {"success": True}
+            res_data = {"success": True}
         else:
             print(utils.get_manage_pass().decode('utf-8'))
-    return {"success": False}
+    print(json.dumps(res_data, ensure_ascii=False))
+    return Response(json.dumps(res_data, ensure_ascii=False), content_type='application/json')
 
 
 if __name__ == '__main__':
