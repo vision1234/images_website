@@ -55,7 +55,7 @@ def search():
     results.limit(new_num).skip(start_idx)
     paginated_images = list(results)  # data[start_idx:end_idx]
     total_pages = (data_num + new_num - 1) // new_num
-    data = {"data": paginated_images, 'total_pages': total_pages, 'page': page, 'page_size': new_num}
+    data = {"data": paginated_images, 'total_pages': data_num, 'page': page, 'page_size': new_num}
     # return jsonify(data)
     resp = Response(json.dumps(data, ensure_ascii=False), content_type='application/json')
     # resp.headers.add('Access-Control-Allow-Origin', '*')
