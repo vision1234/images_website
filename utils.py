@@ -81,3 +81,8 @@ def add_redis_tags(data):
 def get_manage_pass():
     redis_client = redis.Redis(host=hostname, port=r_port, db=r_db, password=r_password)
     return redis_client.get(manage_key)
+
+
+def get_image_pass():
+    redis_client = redis.Redis(host=hostname, port=r_port, db=r_db, password=r_password)
+    return redis_client.get(image_key)

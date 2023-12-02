@@ -66,13 +66,13 @@
 <body>
     <div class="login-container">
         <h2>Login</h2>
-        <form method="post">
+        <form method="post" action="{{ url_for('login') }}">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
             <br>
             <input type="submit" value="Login">
         </form>
-        <a class="signup-link" href="#">大丘丘病了二丘丘瞧，三丘丘采药四丘丘</a>
+        <a class="signup-link" href="#">{{tip}}</a>
     </div>
 </body>
 </html>

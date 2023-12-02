@@ -1,10 +1,11 @@
 import os
-from flask import Flask, render_template, send_file, url_for, request, redirect
+from flask import Flask, render_template, send_file, url_for, request, redirect, session
 import random
 import utils
 
 app = Flask(__name__)
-
+app.config['SECRET_KEY'] = 'ASDJAasdjh1231h3j'  # 更换为随机的密钥
+app.config['SESSION_TYPE'] = 'filesystem'  # 可以选择其他存储方式
 # 假设我们的图片文件存放在 static/images 目录下
 image_folder = "static/images"
 thumbnail_path = "static/thumbnail"
@@ -83,12 +84,21 @@ def search(keyword, page=1):
 # 中间件函数，用于检查User Agent
 @app.before_request
 def check_user_agent():
-    user_agent = request.headers.get('User-Agent')
-    if 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent:
-        # 如果User Agent中包含手机相关的字符串，重定向到手机用户页面
+    print(request.url)
+    print(request.url_root)
+    if request.url == request.url_root + 'login':
         pass
     else:
-        return "傻逼华为云"
+        if session.get("user_status") == "login":
+            pass
+        else:
+            return render_template('login.html', tip="大丘丘病了二丘丘瞧，三丘丘采药四丘丘")
+    # user_agent = request.headers.get('User-Agent')
+    # if 'Mobile' in user_agent or 'Android' in user_agent or 'iPhone' in user_agent:
+    #     # 如果User Agent中包含手机相关的字符串，重定向到手机用户页面
+    #     pass
+    # else:
+    #     return "傻逼华为云"
 
 
 @app.route('/')
@@ -142,7 +152,7 @@ def random():
     conn = utils.get_conn()
     coll = utils.get_collect(conn, utils.coll)
     res_random = list(coll.aggregate([{'$sample': {'size': 1}}]))
-    print(request.url_root+res_random[0]["image_path"])
+    print(request.url_root + res_random[0]["image_path"])
     return redirect(res_random[0]["image_path"])
 
 
@@ -158,6 +168,19 @@ def category():
     print("a", sorted(cates))
     print(data)
     return render_template('category.html', cate=data)
+
+
+@app.route('/login', methods=['POST'])
+def login():
+    data = request.form['password']
+    print(utils.get_image_pass().decode('utf-8'))
+    if data == utils.get_image_pass().decode('utf-8'):
+        session['user_status'] = "login"
+        # redirect(url_for('home'))
+    else:
+        print(data)
+    return redirect(url_for('home'))
+        # return render_template('login.html', tip="密码错误")
 
 
 if __name__ == '__main__':
